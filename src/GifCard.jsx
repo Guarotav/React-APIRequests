@@ -6,7 +6,7 @@ const GifCard = (props) => {
 
   return (
 
-    <div className="gif-card" style = {cardStyle}>
+    <div className="gif-card">
 
       <img
         src={gif.images.fixed_height.url}
