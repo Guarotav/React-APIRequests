@@ -9,16 +9,17 @@ import GifCard from "./GifCard"
 
 
 const GIPHY_API_KEY = `M5DpTGZFf9Mz3pKladW8ZWy50KnUi4d8`;
-const url = `http://api.giphy.com/v1/gifs/search?q=hello&api_key=${GIPHY_API_KEY}`;
+
 // const GIPHY_API_KEY = "YOUR_API_KEY";
 
 const App = () => {
   const [gifs, setGifs] = useState([]);
-  const [query, setQuery] = useState("");
+  const [input, setInput] = useState("");
   
   //Tries to fetch the data
   
-  const fetchGifs = async () =>{
+  const fetchGifs = async (searchTerm) =>{
+    const url = `http://api.giphy.com/v1/gifs/search?q=${searchTerm}&api_key=${GIPHY_API_KEY}`;
     const gifsResponse = await axios.get(url);
     const gifsData = gifsResponse.data;
     const giphyData = gifsData.data;
@@ -34,16 +35,16 @@ const App = () => {
   
 
   const handleSearch = async (searchTerm) => {
-    setQuery (searchTerm);
-    const res = await axios.get(url);
-    const data = res.data;
-    setGifs(data.data);
+    setInput(searchTerm);
+    fetchGifs(searchTerm);
   }
 
   
   return (
     <div className="app">
       <h1 className="title">Let's look for some Gifs!</h1>
+      <SearchField input={input} setInput={setInput} onSearch={handleSearch} />
+
       {/* <SearchField onSearch={handleSearch} /> */}
       <div className="gif-grid">
         {gifs.map((gif) => (
