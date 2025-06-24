@@ -1,57 +1,64 @@
-import React, {useState, useEffect, useSyncExternalStore} from "react";
-import axios from "axios"
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { createRoot } from "react-dom/client";
 // import axios from "axios"; // Maybe we'll need axios? 🤔
 import "./style.css";
-import SearchField from "./SearchField"
-import GifCard from "./GifCard"
-
-
+import SearchField from "./SearchField";
+import GifCard from "./GifCard";
 
 const GIPHY_API_KEY = `M5DpTGZFf9Mz3pKladW8ZWy50KnUi4d8`;
-const url = `http://api.giphy.com/v1/gifs/search?q=hello&api_key=${GIPHY_API_KEY}`;
+
 // const GIPHY_API_KEY = "YOUR_API_KEY";
 
 const App = () => {
   const [gifs, setGifs] = useState([]);
-  const [query, setQuery] = useState("");
-  
+  const [input, setInput] = useState("");
+
   //Tries to fetch the data
-  
-  const fetchGifs = async () =>{
+  const fetchTrendingGifs = async () => {
+  const url = `http://api.giphy.com/v1/gifs/trending?api_key=${GIPHY_API_KEY}`;
+  const response = await axios.get(url);
+  const trendingGifs = response.data.data;
+  setGifs(trendingGifs);
+};
+
+  const fetchGifs = async (searchTerm) => {
+    if (!searchTerm) {
+      console.log("No Search Term");
+    }
+    const url = `http://api.giphy.com/v1/gifs/search?q=${searchTerm}&api_key=${GIPHY_API_KEY}`;
     const gifsResponse = await axios.get(url);
     const gifsData = gifsResponse.data;
     const giphyData = gifsData.data;
+    setGifs(giphyData);
+  };
 
-    console.log(giphyData);
-    setGifs(giphyData);}
-  
   //useEffect to make sure that it does not go infinitley through that function
   useEffect(() => {
-    fetchGifs();
+    fetchTrendingGifs(); // default search term when app loads
   }, []);
 
-  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Form submitted with input:", input); //Tests to check if we were getting inputs
+    fetchGifs(input);
+  };
 
-  const handleSearch = async (searchTerm) => {
-    setQuery (searchTerm);
-    const res = await axios.get(url);
-    const data = res.data;
-    setGifs(data.data);
-  }
-
-  
   return (
     <div className="app">
       <h1 className="title">Let's look for some Gifs!</h1>
-      {/* <SearchField onSearch={handleSearch} /> */}
+      <SearchField
+        input={input}
+        setInput={setInput}
+        handleSubmit={handleSubmit}
+      />
+      <button onClick={fetchTrendingGifs}>Trending GIFs</button>
+
       <div className="gif-grid">
         {gifs.map((gif) => (
           <GifCard key={gif.id} gif={gif} />
         ))}
       </div>
-
-      
     </div>
   );
 };
