@@ -15,7 +15,7 @@ const App = () => {
   const [input, setInput] = useState("");
 
   //Tries to fetch the data
-  //Copied the same function for fetchGifs and inserted the user 
+
   const fetchTrendingGifs = async () => {
   const url = `http://api.giphy.com/v1/gifs/trending?api_key=${GIPHY_API_KEY}`;
   const response = await axios.get(url);

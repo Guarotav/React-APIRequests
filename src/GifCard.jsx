@@ -11,7 +11,9 @@ const GifCard = (props) => {
   };
 
   return (
-    <div className="gif-card">
+
+    <div className="gif-card" style = {cardStyle}>
+
       <img
         src={gif.images.fixed_height.url}
         style={cardStyle}
