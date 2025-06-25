@@ -6,7 +6,7 @@ const SearchField = ({input, setInput, handleSubmit }) => {
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="Search..."
+          placeholder="Enter Gif"
           value={input}
           onChange={(e) => setInput(e.target.value)}
         />
